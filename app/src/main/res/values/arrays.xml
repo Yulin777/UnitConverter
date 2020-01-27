@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="convertion_types">
+        <item>MM</item>
+        <item>CM</item>
+        <item>DM</item>
+        <item>METER</item>
+        <item>KM</item>
+    </string-array>
+</resources>
