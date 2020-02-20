@@ -1,4 +1,4 @@
-package com.example.converter;
+package com.example.converter.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.converter.R;
+
 public class MainActivity extends AppCompatActivity implements MyView {
     private Presenter mPresenter;
 
@@ -19,11 +21,14 @@ public class MainActivity extends AppCompatActivity implements MyView {
     private Spinner convertToSpinner;
     private TextView resultTextView;
 
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        uid = getIntent().getStringExtra("uid");
 
         mPresenter = new Presenter(this);
 

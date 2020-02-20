@@ -1,18 +1,20 @@
-package com.example.converter.login.ui.login;
+package com.example.converter.signin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.converter.R;
+import com.example.converter.main.MainActivity;
+import com.example.converter.signup.SignUpActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordEditText;
     Button signInBtn;
     Button signUpBtn;
-    ProgressBar loadingProgressBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         signInBtn = findViewById(R.id.signin);
         signUpBtn = findViewById(R.id.signup);
-        loadingProgressBar = findViewById(R.id.loading);
 
 
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -53,37 +54,22 @@ public class LoginActivity extends AppCompatActivity {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
                 attemptLogin();
             }
         });
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                attemptSignUp();
+                openSignUpActivity();
             }
         });
     }
 
-    private void attemptSignUp() {
-        String email = usernameEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
-                    @Override
-                    public void onComplete(Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Hello "+user.getDisplayName(),Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    private void openSignUpActivity() {
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        startActivity(intent);
     }
+
 
     private void attemptLogin() {
         String email = usernameEditText.getText().toString();
@@ -95,11 +81,19 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(LoginActivity.this, "Hello " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                            openMainActivity();
                         } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void openMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("uid", mAuth.getUid());
+        startActivity(intent);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.converter;
+package com.example.converter.main;
 
 public enum Type {
     MM,
